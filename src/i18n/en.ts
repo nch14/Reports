@@ -1,0 +1,83 @@
+// Source of truth for UI text. Other locales must provide every key (enforced by the Messages type).
+// Strings may contain {name} placeholders, filled in by the page with text or links.
+export const en = {
+  appName: "Reports",
+  nav: { reports: "Reports", agents: "Agents", logout: "Log out", language: "Language" },
+
+  login: {
+    title: "Log in",
+    tagline: "Everything your agents wrote, in one place.",
+    password: "Password",
+    submit: "Log in",
+    wrongPassword: "Wrong password.",
+    tooManyAttempts: (seconds: number) => `Too many attempts. Try again in ${seconds}s.`,
+  },
+
+  list: {
+    tags: "Tags",
+    noTags: "No tags yet",
+    projects: "Projects",
+    agents: "Agents",
+    date: "Date",
+    from: "From",
+    to: "To",
+    search: "Search titles and content",
+    newestFirst: "Newest first",
+    oldestFirst: "Oldest first",
+    count: (n: number) => (n === 1 ? "1 report" : `${n} reports`),
+    fromDate: (d: string) => `from ${d}`,
+    toDate: (d: string) => `to ${d}`,
+    clearAll: "Clear all",
+    noMatches: "Nothing matches these filters. {clear}",
+    clearFilters: "Clear filters",
+    emptyNoAgents: "No reports yet. {connect} to get started.",
+    connectAgent: "Connect an agent",
+    empty: "No reports yet. Ask an agent to write one.",
+    today: "Today",
+    yesterday: "Yesterday",
+    previous: "Previous",
+    next: "Next",
+    range: (from: number, to: number, total: number) => `${from}–${to} of ${total}`,
+    htmlReport: "HTML report",
+    revised: (v: number) => `Revised, now v${v}`,
+  },
+
+  report: {
+    back: "All reports",
+    html: "HTML",
+    version: "Version",
+    latest: "latest",
+    delete: "Delete",
+    confirmDelete: "Delete this report and all its versions?",
+    viewingOld: (v: number, date: string) => `Viewing v${v} from ${date}.`,
+    showLatest: (v: number) => `Show latest (v${v})`,
+    older: "Older",
+    newer: "Newer",
+  },
+
+  agents: {
+    title: "Agents",
+    intro: "Each agent gets its own token, so reports show who wrote them and you can revoke one without affecting the others.",
+    tokenFor: (name: string) => `Token for ${name}`,
+    tokenOnce: "Copy it now; it will not be shown again.",
+    snippetClaude: "Claude Code",
+    snippetCodex: "Codex (~/.codex/config.toml, then export REPORTS_TOKEN)",
+    snippetOther: "Other MCP clients (JSON config)",
+    newAgent: "New agent",
+    namePlaceholder: "e.g. Claude Code on laptop",
+    create: "Create token",
+    connected: "Connected agents",
+    revoked: "revoked",
+    created: (ago: string) => `Created ${ago}`,
+    lastUsed: (ago: string) => `last used ${ago}`,
+    neverUsed: "never used",
+    revoke: "Revoke",
+    confirmRevoke: (name: string) => `Revoke the token for ${name}?`,
+    endpoint: "Endpoint",
+    endpointText: "MCP over Streamable HTTP at {url}, authenticated with {header}.",
+  },
+
+  notFound: { title: "Not found", back: "Back to all reports" },
+};
+
+export type Messages = typeof en;

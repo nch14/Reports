@@ -1,0 +1,37 @@
+{
+  "name": "reports",
+  "version": "0.1.0",
+  "description": "A self-hosted inbox where AI agents write reports for one human, over MCP.",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/nch14/Reports.git"
+  },
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=22.13"
+  },
+  "scripts": {
+    "dev": "tsx watch --disable-warning=ExperimentalWarning src/index.ts",
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node --disable-warning=ExperimentalWarning dist/index.js",
+    "token": "tsx --disable-warning=ExperimentalWarning src/cli.ts",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx --test test/*.test.ts"
+  },
+  "dependencies": {
+    "@hono/node-server": "^2.1.5",
+    "@modelcontextprotocol/sdk": "^1.32.1",
+    "hono": "^4.13.13",
+    "marked": "^18.1.1",
+    "sanitize-html": "^2.18.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.5",
+    "@types/sanitize-html": "^2.16.2",
+    "tsx": "^4.23.15",
+    "typescript": "^7.0.2"
+  }
+}

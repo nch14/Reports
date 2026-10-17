@@ -1,0 +1,34 @@
+# Production: the app plus Caddy for automatic HTTPS.
+#   docker compose -f compose.prod.yml up -d --build
+# Needs DOMAIN, OWNER_PASSWORD and PUBLIC_URL (https://$DOMAIN) in .env.
+services:
+  reports:
+    build: .
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      # Caddy is the only way in, so its X-Forwarded-For hop is trustworthy.
+      TRUST_PROXY: "1"
+    volumes:
+      - reports-data:/data
+
+  caddy:
+    image: caddy:2
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    environment:
+      DOMAIN: ${DOMAIN:?Set DOMAIN in .env}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+    depends_on:
+      - reports
+
+volumes:
+  reports-data:
+  caddy-data:
+  caddy-config:

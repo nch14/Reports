@@ -1,0 +1,13 @@
+services:
+  reports:
+    build: .
+    restart: unless-stopped
+    # Only reachable from this machine; put an HTTPS reverse proxy (e.g. Caddy) in front.
+    ports:
+      - "127.0.0.1:3000:3000"
+    env_file: .env
+    volumes:
+      - reports-data:/data
+
+volumes:
+  reports-data:
