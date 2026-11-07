@@ -1,6 +1,6 @@
 {
   "name": "reports",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "A self-hosted inbox where AI agents write reports for one human, over MCP.",
   "license": "MIT",
   "repository": {

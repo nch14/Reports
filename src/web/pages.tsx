@@ -117,6 +117,9 @@ const ICONS = {
   list: <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />,
   sort: <path d="m3 16 4 4 4-4M7 20V4M21 8l-4-4-4 4M17 4v16" />,
   globe: <><circle cx="12" cy="12" r="9" /><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18" /></>,
+  logout: <><path d="M10 17v2H5V5h5v2M14 8l4 4-4 4M8 12h10" /></>,
+  filter: <><path d="M4 7h16M7 12h10M10 17h4" /></>,
+  down: <path d="m6 9 6 6 6-6" />,
 };
 const Icon: FC<{ name: keyof typeof ICONS }> = ({ name }) => (
   <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">{ICONS[name]}</svg>
@@ -149,7 +152,9 @@ export const Layout: FC<{ title: string; nav?: "reports" | "agents"; children?: 
       <html lang={intl}>
         <head>
           <meta charset="utf-8" />
-          <meta name="viewport" content="width=device-width, initial-scale=1" />
+          <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+          <meta name="apple-mobile-web-app-capable" content="yes" />
+          <meta name="theme-color" content="#f6f7fc" />
           <title>{title === t.appName ? title : `${title} · ${t.appName}`}</title>
           <link rel="stylesheet" href={`/assets/style.css?v=${ASSET_VERSION}`} />
           <script src={`/assets/app.js?v=${ASSET_VERSION}`} defer></script>
@@ -158,7 +163,7 @@ export const Layout: FC<{ title: string; nav?: "reports" | "agents"; children?: 
           {nav && (
             <header class="top">
               <div class="wrap">
-                <a class="brand" href="/"><span class="logo"><Icon name="logo" /></span>{t.appName}</a>
+                <a class="brand" href="/"><span class="logo"><Icon name="logo" /></span><span>{t.appName}</span></a>
                 <nav class="tabs">
                   <a href="/" class={nav === "reports" ? "active" : ""}><Icon name="list" /><span>{t.nav.reports}</span></a>
                   <a href="/agents" class={nav === "agents" ? "active" : ""}><Icon name="bot" /><span>{t.nav.agents}</span></a>
@@ -166,7 +171,7 @@ export const Layout: FC<{ title: string; nav?: "reports" | "agents"; children?: 
                 <div class="spacer"></div>
                 <LanguageSwitcher />
                 <form method="post" action="/logout">
-                  <button class="ghost small" type="submit">{t.nav.logout}</button>
+                  <button class="ghost small logout" type="submit" aria-label={t.nav.logout} title={t.nav.logout}><Icon name="logout" /><span>{t.nav.logout}</span></button>
                 </form>
               </div>
             </header>
@@ -238,6 +243,7 @@ const ReportRow: FC<{ r: Report; f: Filters }> = ({ r, f }) => {
             <Avatar name={r.agent_name} />
             {r.agent_name}
             {r.version > 1 && <span class="rev" title={t.list.revised(r.version)}><Icon name="history" />v{r.version}</span>}
+            <span class="meta-when">{clock(r.created_at, intl)}</span>
           </span>
         </div>
       </div>
@@ -277,7 +283,13 @@ export const ListPage: FC<{
   return (
     <Layout title={t.appName} nav="reports">
       <div class="list-layout">
+        <input class="filter-toggle" type="checkbox" id="filter-toggle" aria-label={t.list.filters} />
+        <label class="filter-backdrop" for="filter-toggle" aria-hidden="true"></label>
         <aside class="sidebar">
+          <div class="sheet-head">
+            <span class="sheet-title">{t.list.filters}</span>
+            <label class="sheet-close" for="filter-toggle" role="button" tabindex={0} aria-label={t.list.close}><Icon name="x" /></label>
+          </div>
           <section>
             <h3>{t.list.tags}</h3>
             {tags.length === 0 ? <p class="none">{t.list.noTags}</p> : (
@@ -335,8 +347,14 @@ export const ListPage: FC<{
               <Icon name="search" />
               <input type="search" name="q" placeholder={t.list.search} value={f.q ?? ""} />
             </form>
-            <a class="button" href={filtersUrl(f, { sort: f.sort === "newest" ? "oldest" : "newest" })}>
-              <Icon name="sort" />{f.sort === "newest" ? t.list.newestFirst : t.list.oldestFirst}
+            <label class="filter-trigger" for="filter-toggle" title={t.list.filters}>
+              <Icon name="filter" />
+              {(f.tags.length + Number(!!f.project) + Number(!!f.agent) + Number(!!f.from) + Number(!!f.to)) > 0 && (
+                <span class="filter-count">{f.tags.length + Number(!!f.project) + Number(!!f.agent) + Number(!!f.from) + Number(!!f.to)}</span>
+              )}
+            </label>
+            <a class="button sort-button" href={filtersUrl(f, { sort: f.sort === "newest" ? "oldest" : "newest" })} aria-label={f.sort === "newest" ? t.list.newestFirst : t.list.oldestFirst} title={f.sort === "newest" ? t.list.newestFirst : t.list.oldestFirst}>
+              <Icon name="sort" /><span>{f.sort === "newest" ? t.list.newestFirst : t.list.oldestFirst}</span>
             </a>
           </div>
 
@@ -364,6 +382,10 @@ export const ListPage: FC<{
                 <ol class="entries">{d.items.map((r) => <ReportRow r={r} f={f} />)}</ol>
               </section>
             ))
+          )}
+
+          {reports.length > 0 && !hasMore && (
+            <div class="feed-end">{t.list.end}</div>
           )}
 
           {(f.page > 1 || hasMore) && (
