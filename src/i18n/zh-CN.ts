@@ -14,6 +14,8 @@ export const zhCN: Messages = {
   },
 
   list: {
+    filters: "筛选",
+    close: "关闭",
     tags: "标签",
     noTags: "暂无标签",
     projects: "项目",
@@ -40,6 +42,7 @@ export const zhCN: Messages = {
     range: (from, to, total) => `第 ${from}–${to} 条，共 ${total} 条`,
     htmlReport: "HTML 报告",
     revised: (v) => `已修订，当前 v${v}`,
+    end: "没有更多报告了",
   },
 
   report: {

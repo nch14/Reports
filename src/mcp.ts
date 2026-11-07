@@ -36,7 +36,7 @@ function handle<A>(fn: (args: A) => CallToolResult): (args: A) => CallToolResult
 }
 
 export function createMcpServer(store: Store, agent: Agent, publicUrl: string): McpServer {
-  const server = new McpServer({ name: "reports", version: "0.1.0" }, { instructions: INSTRUCTIONS });
+  const server = new McpServer({ name: "reports", version: "0.1.1" }, { instructions: INSTRUCTIONS });
   const url = (id: string) => `${publicUrl}/reports/${id}`;
 
   const summarize = (r: Report) => ({

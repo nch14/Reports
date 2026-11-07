@@ -14,6 +14,8 @@ export const en = {
   },
 
   list: {
+    filters: "Filters",
+    close: "Close",
     tags: "Tags",
     noTags: "No tags yet",
     projects: "Projects",
@@ -40,6 +42,7 @@ export const en = {
     range: (from: number, to: number, total: number) => `${from}–${to} of ${total}`,
     htmlReport: "HTML report",
     revised: (v: number) => `Revised, now v${v}`,
+    end: "No more reports",
   },
 
   report: {
